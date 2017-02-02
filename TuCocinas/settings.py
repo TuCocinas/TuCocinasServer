@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'TuCocinas.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
+"""
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -92,7 +92,17 @@ DATABASES = {
 		'PORT': '',
 	}
 }
-
+"""
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'd9p9vc7gatc43m',
+		'USER': 'nrezyxbndonyxw',
+		'PASSWORD': 'e8de50c91f9e7081dbed4fcb04b0eef9d7ee20e70c3b44c23ebe0175f46a72d6',
+		'HOST': 'ec2-54-83-47-194.compute-1.amazonaws.com',
+		'PORT': '',
+	}
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
