@@ -4,6 +4,8 @@ from django.contrib import admin
 
 api_patterns = [
 	url(r'^receta/', include('TuCocinas.apps.receta.urls')),
+	url(r'^usuario/', include('TuCocinas.apps.users.urls')),
+	url(r'^base/', include('TuCocinas.apps.base.urls')),
 ]
 
 urlpatterns = [

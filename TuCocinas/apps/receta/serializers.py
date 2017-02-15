@@ -10,7 +10,10 @@ class RecetaSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Receta
 		fields = (
-			'nombre_receta', 
+			'pk',
+			'nombre_receta',
+			'slug_receta',
+			'heart_like_receta_user',
 			'descripcion_receta',
 			'calificacion_receta',
 			'preparacion_receta',
@@ -20,5 +23,6 @@ class RecetaSerializer(serializers.ModelSerializer):
 			'receta_url_imagen',
 			'categoria_receta_nombre',
 			'usuario_nombre', 
-			'tipo_receta_nombre'
+			'tipo_receta_nombre',
+			'ingrediente_receta'
 		)

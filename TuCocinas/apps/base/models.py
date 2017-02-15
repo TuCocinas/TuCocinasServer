@@ -5,6 +5,7 @@ from django.db import models
 
 class Tipo(models.Model):
 	nombre_tipo = models.CharField(max_length = 45)
+	slug_tipo = models.CharField(max_length = 50)
 
 	def __str__(self):
 		return self.nombre_tipo
@@ -14,6 +15,7 @@ class Tipo(models.Model):
 
 class Categoria(models.Model):
 	nombre_categoria = models.CharField(max_length = 45)
+	slug_categoria = models.CharField(max_length = 50)
 
 	def __str__(self):
 		return self.nombre_categoria
@@ -23,7 +25,7 @@ class Categoria(models.Model):
 
 class Dificultad(models.Model):
 	nombre_dificultad = models.CharField(max_length = 45)
-	slug_dificultad = models.CharField(max_length = 10)
+	slug_dificultad = models.CharField(max_length = 50)
 
 	def __str__(self):
 		return self.nombre_dificultad

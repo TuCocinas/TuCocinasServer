@@ -38,11 +38,15 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',
+	'rest_framework.authtoken',
+	'rest_auth',
 	'TuCocinas.apps.users',
 	'TuCocinas.apps.base',
 	'TuCocinas.apps.receta',
 	'corsheaders',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE_CLASSES = [
 	'django.middleware.security.SecurityMiddleware',
@@ -54,9 +58,21 @@ MIDDLEWARE_CLASSES = [
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'corsheaders.middleware.CorsMiddleware',
+	'TuCocinas.apps.users.disable.DisableCSRF'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+REST_FRAMEWORK = {
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+		'rest_framework.authentication.SessionAuthentication',
+		'rest_framework.authentication.BasicAuthentication'
+	),
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.IsAuthenticated',
+	)
+}
 
 ROOT_URLCONF = 'TuCocinas.urls'
 
@@ -81,7 +97,7 @@ WSGI_APPLICATION = 'TuCocinas.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-"""
+
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -103,7 +119,7 @@ DATABASES = {
 		'PORT': '',
 	}
 }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
