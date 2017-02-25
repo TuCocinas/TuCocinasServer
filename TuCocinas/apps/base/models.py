@@ -32,23 +32,3 @@ class Dificultad(models.Model):
 
 	def __unicode__(self):
 		return self.nombre_dificultad
-
-class Medida(models.Model):
-	nombre_medida = models.CharField(max_length = 45)
-	prefijo_medida = models.CharField(max_length = 3)
-
-	def __str__(self):
-		return self.nombre_medida
-
-	def __unicode__(self):
-		return self.nombre_medida
-
-class Ingrediente(models.Model):
-	nombre_ingrediente = models.CharField(max_length = 45)
-	medida_ingrediente = models.ForeignKey(Medida)
-
-	def __str__(self):
-		return self.nombre_ingrediente
-
-	def __unicode__(self):
-		return self.nombre_ingrediente

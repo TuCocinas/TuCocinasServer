@@ -14,10 +14,10 @@ class Receta(models.Model):
 	nombre_receta = models.CharField(max_length = 80)
 	slug_receta = models.CharField(max_length = 120)
 	descripcion_receta = models.CharField(max_length = 500)
-	tiempo_preparacion_receta = models.CharField(max_length = 5)
+	tiempo_preparacion_receta = models.CharField(max_length = 20)
 	dificultad_receta = models.ForeignKey(Dificultad)
 	porciones_receta = models.CharField(max_length = 2)
-	foto_receta = models.ImageField(upload_to = 'img/recetas/')
+	foto_receta = models.ImageField(upload_to = 'img/recetas/', blank = True, null = True)
 	categoria_receta = models.ForeignKey(Categoria)
 	tipo_receta = models.ForeignKey(Tipo)
 	heart_like_receta = models.ManyToManyField(User, blank = True, related_name = 'heart_like_receta')
@@ -54,7 +54,7 @@ class Receta(models.Model):
 		return [{'orden_paso': paso.orden_paso, 'foto_paso': 'static/'+paso.foto_paso.url if paso.foto_paso and hasattr(paso.foto_paso, 'url') else '', 'descripcion_paso': paso.descripcion_paso} for paso in self.recetapaso_set.all()]
 
 	def ingrediente_receta(self):
-		return [{'ingrediente': ingrediente.ingrediente.nombre_ingrediente, 'cantidad': ingrediente.cantidad, 'medida': ingrediente.ingrediente.medida_ingrediente} for ingrediente in self.ingredientereceta_set.all()]
+		return [ingrediente.descripcion_ingrediente for ingrediente in self.ingredientereceta_set.all()]
 
 	def __str__(self):
 		return self.nombre_receta
@@ -67,6 +67,9 @@ class RecetaPaso(models.Model):
 	orden_paso = models.CharField(max_length = 1)
 	foto_paso = models.ImageField(upload_to = 'img/recetas/pasos/', blank = True, null = True)
 	descripcion_paso = models.CharField(max_length = 1000)
+
+	class Meta:
+		ordering = ['orden_paso']
 
 	def __str__(self):
 		return self.descripcion_paso
@@ -86,6 +89,5 @@ class ComentarioReceta(models.Model):
 		return self.comentario_receta
 
 class IngredienteReceta(models.Model):
-	ingrediente = models.ForeignKey(Ingrediente)
 	receta = models.ForeignKey(Receta)
-	cantidad = models.DecimalField(max_digits = 6, decimal_places = 2)
+	descripcion_ingrediente = models.CharField(max_length = 150)

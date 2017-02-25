@@ -1,11 +1,14 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from TuCocinas.apps.base.models import *
+from django.utils.text import slugify
 from django.db.models import Q
 from .serializers import *
 from .pagination import *
 from .models import *
+import json
 
 class RecetaList(ListAPIView):
 	serializer_class = RecetaSerializer
@@ -52,4 +55,38 @@ class HeartLikeReceta(APIView):
 			receta.save()
 		else:
 			receta.heart_like_receta.add(user_data.user)
+		return Response(response)
+
+class RecetaNew(APIView):
+
+	def post(self, request, format = None):
+		response = {}
+		user_data = Token.objects.get(key = self.request.META['HTTP_TOKEN'])
+		content = json.loads(request.body.decode('utf-8'))['data_receta']
+		receta = Receta(
+			usuario = user_data.user,
+			nombre_receta = content['nombre_receta'],
+			slug_receta = slugify(content['nombre_receta']),
+			descripcion_receta = content['descripcion_receta'],
+			tiempo_preparacion_receta = content['tiempo_receta'],
+			dificultad_receta = Dificultad.objects.get(slug_dificultad = content['dificultad_receta']),
+			porciones_receta = content['racion_receta'],
+			categoria_receta = Categoria.objects.get(slug_categoria = content['categoria_receta']),
+			tipo_receta = Tipo.objects.get(slug_tipo = content['tipo_receta'])
+		)
+		receta.save()
+		for item, lista_ingrediente in content['lista_ingrediente'].iteritems():
+			ingrediente_receta = IngredienteReceta(
+				receta = receta,
+				descripcion_ingrediente = lista_ingrediente
+			)
+			ingrediente_receta.save()
+		for item, lista_paso in content['lista_paso'].iteritems():
+			ingrediente_paso = RecetaPaso(
+				receta = receta,
+				orden_paso = int(item)+1,
+				descripcion_paso = lista_paso
+			)
+			ingrediente_paso.save()
+		response['msg'] = 'Exito al guardar la receta'
 		return Response(response)
