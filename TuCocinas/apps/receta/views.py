@@ -21,7 +21,7 @@ class RecetaList(ListAPIView):
 		categoria = self.request.query_params.get('categoria', None)
 		dificultad = self.request.query_params.get('dificultad', None)
 		orden = self.request.query_params.get('orden', None)
-		queryset = Receta.objects.all().order_by('-id')
+		queryset = Receta.objects.filter(public_receta = True).order_by('-id')
 		if(search is not None and search != ''):
 			queryset = queryset.filter(Q(nombre_receta__icontains = search) | Q(descripcion_receta__icontains = search))
 		if(tipo is not None and tipo != ''):
@@ -57,31 +57,45 @@ class HeartLikeReceta(APIView):
 			receta.heart_like_receta.add(user_data.user)
 		return Response(response)
 
+class StarLikeReceta(APIView):
+
+	def get(self, request, format = None):
+		response = {}
+		user_data = Token.objects.get(key = self.request.META['HTTP_TOKEN'])
+		receta = Receta.objects.get(slug_receta = self.request.query_params.get('receta', None))
+		if(receta.star_like_receta.filter(auth_token = user_data.pk).exists()):
+			receta.star_like_receta.remove(user_data.user)
+			receta.save()
+		else:
+			receta.star_like_receta.add(user_data.user)
+		return Response(response)
+
 class RecetaNew(APIView):
 
 	def post(self, request, format = None):
 		response = {}
 		user_data = Token.objects.get(key = self.request.META['HTTP_TOKEN'])
-		content = json.loads(request.body.decode('utf-8'))['data_receta']
+		content = json.loads(request.body.decode('utf-8'))
 		receta = Receta(
 			usuario = user_data.user,
-			nombre_receta = content['nombre_receta'],
-			slug_receta = slugify(content['nombre_receta']),
-			descripcion_receta = content['descripcion_receta'],
-			tiempo_preparacion_receta = content['tiempo_receta'],
-			dificultad_receta = Dificultad.objects.get(slug_dificultad = content['dificultad_receta']),
-			porciones_receta = content['racion_receta'],
-			categoria_receta = Categoria.objects.get(slug_categoria = content['categoria_receta']),
-			tipo_receta = Tipo.objects.get(slug_tipo = content['tipo_receta'])
+			nombre_receta = content['data_receta']['nombre_receta'],
+			slug_receta = slugify(content['data_receta']['nombre_receta']),
+			descripcion_receta = content['data_receta']['descripcion_receta'],
+			tiempo_preparacion_receta = content['data_receta']['tiempo_receta'],
+			public_receta = content['on_save'],
+			dificultad_receta = Dificultad.objects.get(slug_dificultad = content['data_receta']['dificultad_receta']) if content['data_receta']['dificultad_receta'] != '' else None,
+			porciones_receta = content['data_receta']['racion_receta'],
+			categoria_receta = Categoria.objects.get(slug_categoria = content['data_receta']['categoria_receta']) if content['data_receta']['categoria_receta'] != '' else None,
+			tipo_receta = Tipo.objects.get(slug_tipo = content['data_receta']['tipo_receta']) if content['data_receta']['tipo_receta'] != '' else None
 		)
 		receta.save()
-		for item, lista_ingrediente in content['lista_ingrediente'].iteritems():
+		for item, lista_ingrediente in content['data_receta']['lista_ingrediente'].iteritems():
 			ingrediente_receta = IngredienteReceta(
 				receta = receta,
 				descripcion_ingrediente = lista_ingrediente
 			)
 			ingrediente_receta.save()
-		for item, lista_paso in content['lista_paso'].iteritems():
+		for item, lista_paso in content['data_receta']['lista_paso'].iteritems():
 			ingrediente_paso = RecetaPaso(
 				receta = receta,
 				orden_paso = int(item)+1,

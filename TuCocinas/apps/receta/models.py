@@ -11,17 +11,18 @@ import json
 
 class Receta(models.Model):
 	usuario = models.ForeignKey(User)
-	nombre_receta = models.CharField(max_length = 80)
-	slug_receta = models.CharField(max_length = 120)
-	descripcion_receta = models.CharField(max_length = 500)
-	tiempo_preparacion_receta = models.CharField(max_length = 20)
-	dificultad_receta = models.ForeignKey(Dificultad)
-	porciones_receta = models.CharField(max_length = 2)
+	nombre_receta = models.CharField(max_length = 80, blank = True, null = True)
+	slug_receta = models.CharField(max_length = 120, blank = True, null = True)
+	descripcion_receta = models.CharField(max_length = 500, blank = True, null = True)
+	tiempo_preparacion_receta = models.CharField(max_length = 20, blank = True, null = True)
+	dificultad_receta = models.ForeignKey(Dificultad, blank = True, null = True)
+	porciones_receta = models.CharField(max_length = 2, blank = True, null = True)
 	foto_receta = models.ImageField(upload_to = 'img/recetas/', blank = True, null = True)
-	categoria_receta = models.ForeignKey(Categoria)
-	tipo_receta = models.ForeignKey(Tipo)
+	categoria_receta = models.ForeignKey(Categoria, blank = True, null = True)
+	tipo_receta = models.ForeignKey(Tipo, blank = True, null = True)
 	heart_like_receta = models.ManyToManyField(User, blank = True, related_name = 'heart_like_receta')
 	star_like_receta = models.ManyToManyField(User, blank = True, related_name = 'star_like_receta')
+	public_receta = models.BooleanField(default = True)
 
 	def usuario_nombre(self):
 		return {
@@ -46,6 +47,9 @@ class Receta(models.Model):
 
 	def heart_like_receta_user(self):
 		return [user_token.email for user_token in self.heart_like_receta.all()]
+
+	def star_like_receta_user(self):
+		return [user_token.email for user_token in self.star_like_receta.all()]
 
 	def calificacion_receta(self):
 		return self.heart_like_receta.count()

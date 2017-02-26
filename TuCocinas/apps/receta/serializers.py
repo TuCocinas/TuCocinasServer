@@ -13,6 +13,7 @@ class RecetaSerializer(serializers.ModelSerializer):
 			'pk',
 			'nombre_receta',
 			'slug_receta',
+			'star_like_receta_user',
 			'heart_like_receta_user',
 			'descripcion_receta',
 			'calificacion_receta',
