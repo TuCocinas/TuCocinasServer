@@ -89,4 +89,5 @@ class RecetaNew(APIView):
 			)
 			ingrediente_paso.save()
 		response['msg'] = 'Exito al guardar la receta'
+		response['type'] = 'Exito'
 		return Response(response)
