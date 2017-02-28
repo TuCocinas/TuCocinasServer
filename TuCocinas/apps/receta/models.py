@@ -17,7 +17,7 @@ class Receta(models.Model):
 	tiempo_preparacion_receta = models.CharField(max_length = 20, blank = True, null = True)
 	dificultad_receta = models.ForeignKey(Dificultad, blank = True, null = True)
 	porciones_receta = models.CharField(max_length = 2, blank = True, null = True)
-	foto_receta = models.ImageField(upload_to = 'img/recetas/', blank = True, null = True)
+	foto_receta = models.ImageField(upload_to = 'img/recetas/', default = 'img/none.png', blank = True, null = True)
 	categoria_receta = models.ForeignKey(Categoria, blank = True, null = True)
 	tipo_receta = models.ForeignKey(Tipo, blank = True, null = True)
 	heart_like_receta = models.ManyToManyField(User, blank = True, related_name = 'heart_like_receta')
