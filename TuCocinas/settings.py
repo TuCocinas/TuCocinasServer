@@ -97,6 +97,7 @@ WSGI_APPLICATION = 'TuCocinas.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
 """
 DATABASES = {
 	'default': {
@@ -119,7 +120,6 @@ DATABASES = {
 		'PORT': '',
 	}
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 

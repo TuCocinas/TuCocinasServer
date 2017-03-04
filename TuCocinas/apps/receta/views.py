@@ -1,4 +1,5 @@
 from rest_framework.generics import ListAPIView, CreateAPIView
+from TuCocinas.apps.base.utils import base64ToImage
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -83,6 +84,7 @@ class RecetaNew(APIView):
 			descripcion_receta = content['data_receta']['descripcion_receta'],
 			tiempo_preparacion_receta = content['data_receta']['tiempo_receta'],
 			public_receta = content['on_save'],
+			foto_receta = base64ToImage(content['data_receta']['foto_receta'], 'recetas'),
 			dificultad_receta = Dificultad.objects.get(slug_dificultad = content['data_receta']['dificultad_receta']) if content['data_receta']['dificultad_receta'] != '' else None,
 			porciones_receta = content['data_receta']['racion_receta'],
 			categoria_receta = Categoria.objects.get(slug_categoria = content['data_receta']['categoria_receta']) if content['data_receta']['categoria_receta'] != '' else None,
@@ -98,6 +100,7 @@ class RecetaNew(APIView):
 		for item, lista_paso in content['data_receta']['lista_paso'].iteritems():
 			ingrediente_paso = RecetaPaso(
 				receta = receta,
+				#foto_paso = base64ToImage(lista_paso['image'], 'recetas/pasos'),
 				orden_paso = int(item)+1,
 				descripcion_paso = lista_paso
 			)

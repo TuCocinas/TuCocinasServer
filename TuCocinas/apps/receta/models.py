@@ -61,10 +61,10 @@ class Receta(models.Model):
 		return [ingrediente.descripcion_ingrediente for ingrediente in self.ingredientereceta_set.all()]
 
 	def __str__(self):
-		return self.nombre_receta
+		return str(self.pk)+' - '+self.nombre_receta
 
 	def __unicode__(self):
-		return self.nombre_receta
+		return str(self.pk)+' - '+self.nombre_receta
 
 class RecetaPaso(models.Model):
 	receta = models.ForeignKey(Receta)
